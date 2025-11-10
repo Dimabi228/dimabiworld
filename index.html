@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dimabiworld</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Кровавый фон */
+        .blood-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 0, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(80, 0, 0, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(100, 0, 0, 0.25) 0%, transparent 50%);
+        }
+
+        /* Анимация крови */
+        .blood-flow {
+            position: fixed;
+            top: -100px;
+            width: 300px;
+            height: 800px;
+            background: linear-gradient(45deg, transparent, rgba(120, 0, 0, 0.4), transparent);
+            transform: rotate(45deg);
+            animation: bloodFlow 8s linear infinite;
+            z-index: -1;
+        }
+
+        .blood-flow:nth-child(2) {
+            left: 20%;
+            animation-delay: -2s;
+            width: 200px;
+        }
+
+        .blood-flow:nth-child(3) {
+            left: 60%;
+            animation-delay: -4s;
+            width: 250px;
+        }
+
+        .blood-flow:nth-child(4) {
+            left: 80%;
+            animation-delay: -6s;
+            width: 180px;
+        }
+
+        @keyframes bloodFlow {
+            0% {
+                top: -100px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+
+        /* Капли крови */
+        .blood-drip {
+            position: fixed;
+            top: -50px;
+            width: 3px;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(120, 0, 0, 0.8), transparent);
+            animation: bloodDrip 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes bloodDrip {
+            0% {
+                top: -50px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .username {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 30px 0 50px;
+            color: #ff3333;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.7),
+                         0 0 40px rgba(255, 0, 0, 0.5),
+                         0 0 60px rgba(255, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .username::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ff3333, transparent);
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 25px;
+            background: rgba(20, 0, 0, 0.7);
+            color: #ff6666;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            background: rgba(40, 0, 0, 0.8);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+            color: #ff3333;
+            border-color: rgba(255, 0, 0, 0.6);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-icon {
+            margin-right: 12px;
+            font-size: 1.3rem;
+            color: #ff3333;
+        }
+
+        /* Эффект пульсации для кнопок */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+
+        .btn-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .instructions {
+            margin-top: 50px;
+            padding: 20px;
+            background: rgba(20, 0, 0, 0.6);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #ff9999;
+            text-align: left;
+            max-width: 600px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .instructions h3 {
+            color: #ff3333;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .instructions code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            display: block;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 10px 0;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: #ff6666;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .copy-section {
+            background: rgba(40, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #ff3333;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .username {
+                font-size: 2.2rem;
+                margin: 20px 0 40px;
+            }
+            
+            .btn {
+                padding: 16px 20px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .username {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 14px 18px;
+            }
+            
+            .btn-icon {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blood-background"></div>
+    
+    <!-- Анимация крови -->
+    <div class="blood-flow"></div>
+    <div class="blood-flow"></div>
+    <div class="blood-flow"></div>
+    <div class="blood-flow"></div>
+    
+    <div class="container">
+        <h1 class="username">dimabiworld</h1>
+
+        <div class="buttons-container">
+            <!-- КНОПКИ - ЗАМЕНИТЕ ССЫЛКИ И ТЕКСТ НА СВОИ -->
+            <a href="https://t.me/mywirtualworld" class="btn btn-pulse" target="_blank">
+                <i class="fab fa-telegram btn-icon"></i> Телеграм Канал
+            </a>
+
+            <a href="https://discord.com/users/tilt_dristanul48" class="btn" target="_blank">
+                <i class="fa-brands fa-discord btn-icon"></i> Discord
+            </a>
+
+            <a href="https://www.youtube.com/@goluboyfutbol" class="btn" target="_blank">
+                <i class="fab fa-youtube btn-icon"></i> YouTube
+            </a>
+
+            <a href="https://www.twitch.tv/xppines" class="btn" target="_blank">
+                <i class="fab fa-twitch btn-icon"></i> Twitch
+            </a>
+
+            <a href="https://github.com/Dimabi228" class="btn" target="_blank">
+                <i class="fab fa-github btn-icon"></i> GitHub
+            </a>
+
+            <a href="https://tiktok.com/kensheesh777" class="btn" target="_blank">
+                <i class="fa-brands fa-tiktok btn-icon"></i> TikTok
+            </a>
+
+            <a href="https://steamcommunity.com/profiles/76561199226702508/" class="btn" target="_blank">
+                <i class="fa-brands fa-steam btn-icon"></i> Steam
+            </a>
+
+            <a href="https://steamcommunity.com/profiles/76561198886445476" class="btn" target="_blank">
+                <i class="fa-brands fa-steam btn-icon"></i> Steam for cs2
+            </a>
+
+            <!--
+                ДОБАВЛЯЙТЕ НОВЫЕ КНОПКИ ЗДЕСЬ, КОПИРУЯ И РЕДАКТИРУЯ ЭТОТ БЛОК:
+
+                <a href="ВАША_ССЫЛКА" class="btn" target="_blank">
+                    <i class="fab fa-ИКОНКА btn-icon"></i> ТЕКСТ_КНОПКИ
+                </a>
+
+                Доступные иконки:
+                - fa-youtube, fa-twitch, fa-telegram, fa-discord, fa-vk, fa-github
+                - fa-instagram, fa-twitter, fa-tiktok, fa-reddit, fa-spotify
+                - fa-steam, fa-apple, fa-google, fa-android, fa-windows
+                - или любая другая иконка из Font Awesome
+            -->
+        </div>
+    </div>
+
+    <script>
+        // Создание капель крови
+        function createBloodDrops() {
+            const dropsCount = 8;
+            
+            for (let i = 0; i < dropsCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('blood-drip');
+                
+                // Случайная позиция
+                drop.style.left = Math.random() * 100 + 'vw';
+                
+                // Случайная задержка
+                drop.style.animationDelay = Math.random() * 4 + 's';
+                
+                // Случайная высота
+                drop.style.height = (Math.random() * 80 + 50) + 'px';
+                
+                document.body.appendChild(drop);
+            }
+        }
+        
+        // Добавляем пульсацию случайным кнопкам
+        function addPulseEffect() {
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                // 30% chance for pulse effect
+                if (Math.random() < 0.3) {
+                    btn.classList.add('btn-pulse');
+                }
+            });
+        }
+        
+        window.addEventListener('DOMContentLoaded', function() {
+            createBloodDrops();
+            addPulseEffect();
+            
+            // Обновляем капли каждые 10 секунд
+            setInterval(() => {
+                const drops = document.querySelectorAll('.blood-drip');
+                drops.forEach(drop => {
+                    drop.style.left = Math.random() * 100 + 'vw';
+                    drop.style.animationDelay = Math.random() * 4 + 's';
+                });
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
